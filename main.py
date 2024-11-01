@@ -4,9 +4,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import time
+import csv
+from pathlib import Path
 
 # Initialize vote count dictionary
 votes = {}
+desktop_path = Path.home() / "Desktop"
+file_path = desktop_path / "Poll.csv"
+
 
 # Set up Chrome WebDriver with context manager to ensure cleanup
 with webdriver.Chrome() as driver:
@@ -50,4 +55,7 @@ with webdriver.Chrome() as driver:
             print(f"Child {index + 1}: Error accessing poll element.")
 
     # Final vote count in all polls i sent
-    print("Final Vote Counts:", votes)
+    with open(file_path, "w", newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        for key, value in votes.items():
+            writer.writerow([key, value])
