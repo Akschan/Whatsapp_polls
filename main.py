@@ -49,5 +49,5 @@ with webdriver.Chrome() as driver:
         except NoSuchElementException:
             print(f"Child {index + 1}: Error accessing poll element.")
 
-    # Final vote count
+    # Final vote count in all polls i sent
     print("Final Vote Counts:", votes)
