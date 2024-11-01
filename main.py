@@ -11,6 +11,7 @@ from pathlib import Path
 votes = {}
 desktop_path = Path.home() / "Desktop"
 file_path = desktop_path / "Poll.csv"
+user_input = input("Please enter the Poll title: ").lower()
 
 
 # Set up Chrome WebDriver with context manager to ensure cleanup
@@ -39,16 +40,19 @@ with webdriver.Chrome() as driver:
             )
             # Process the poll options
             aria_label_value = poll_element.get_attribute("aria-label")
-            options = aria_label_value.split(":", 2)[-1].split(",")
+            if user_input in aria_label_value.lower():
+                options = aria_label_value.split(":", 2)[-1].split(",")
 
-            # Parse options and update the vote count
-            for option in options:
-                try:
-                    key = option.split(":")[0].strip()
-                    value = int(option.split(":")[1].replace(".", "").strip())
-                    votes[key] = votes.get(key, 0) + value
-                except ValueError:
-                    print(f"Could not parse vote count for option '{option}'")
+                # Parse options and update the vote count
+                for option in options:
+                    try:
+                        key = option.split(":")[0].strip()
+                        value = int(option.split(":")[1].replace(".", "").strip())
+                        votes[key] = votes.get(key, 0) + value
+                    except ValueError:
+                        print(f"Could not parse vote count for option '{option}'")
+            else:
+                print("the specific poll not found")
         except TimeoutException:
             print(f"Child {index + 1}: No poll element found.")
         except NoSuchElementException:
